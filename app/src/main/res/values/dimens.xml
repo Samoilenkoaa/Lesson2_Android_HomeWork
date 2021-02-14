@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_textSize">20sp</dimen>
+    <dimen name="textView_size">40sp</dimen>
+    <dimen name="buttonLeft_margin">20dp</dimen>
+    <dimen name="button_Margin">5dp</dimen>
+    <dimen name="textView_paddingEnd">30dp</dimen>
+    <dimen name="textView_width">0dp</dimen>
+    <dimen name="textView_height">60dp</dimen>
+    <dimen name="textView_marginTop">124dp</dimen>
+</resources>

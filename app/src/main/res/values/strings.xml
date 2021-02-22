@@ -16,4 +16,6 @@
     <string name="multiply">*</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="light">Светлая тема</string>
+    <string name="night">Темная тема</string>
 </resources>

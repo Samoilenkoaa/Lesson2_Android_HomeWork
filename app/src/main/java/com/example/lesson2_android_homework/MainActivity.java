@@ -1,14 +1,21 @@
 package com.example.lesson2_android_homework;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Calculator calculator;
 
     private Button button1;
     private Button button2;
@@ -28,13 +35,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button button_plus;
     private TextView textView;
 
-
+    SharedPreferences activityPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityPreferences = getSharedPreferences("myApp", MODE_PRIVATE);
+        if (activityPreferences.contains("themes")) {
+            if (activityPreferences.getString("themes", "").equals("light")) {
+                setTheme(R.style.Theme_Lesson2_Android_HomeWork);
+            } else {
+                setTheme(R.style.Theme_Lesson2_Android_HomeWork_Night);
+            }
+        }
         setContentView(R.layout.activity_main);
         initButtons();
+        calculator = new Calculator();
+        refreshScreens();
+        ButtonsSetOnClickLisner();
+
+    }
+
+    public void refreshScreens() {
+        textView.setText(calculator.mainNumber);
     }
 
 
@@ -61,6 +84,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        calculator.input(((Button) v).getText().toString());
+        refreshScreens();
+    }
+
+    public void ButtonsSetOnClickLisner() {
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+        button5.setOnClickListener(this);
+        button6.setOnClickListener(this);
+        button7.setOnClickListener(this);
+        button8.setOnClickListener(this);
+        button9.setOnClickListener(this);
+        button0.setOnClickListener(this);
+        button_C.setOnClickListener(this);
+        button_rovno.setOnClickListener(this);
+        button_del.setOnClickListener(this);
+        button_multiply.setOnClickListener(this);
+        button_minus.setOnClickListener(this);
+        button_plus.setOnClickListener(this);
 
     }
 
@@ -68,13 +112,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(@NonNull Bundle instanceState) {
         super.onSaveInstanceState(instanceState);
-        instanceState.putString("key", textView.getText().toString());
+        instanceState.putString("keyNumber", calculator.mainNumber);
+        instanceState.putString("keyConteiner", calculator.conteiner);
+        instanceState.putString("keyOperator", calculator.operator);
+        instanceState.putBoolean("startOperation", calculator.startOperation);
+        instanceState.putBoolean("startOperationSin", calculator.startOperationSin);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        textView.setText(savedInstanceState.getString("key"));
+        calculator.mainNumber = savedInstanceState.getString("keyNumber");
+        calculator.conteiner = savedInstanceState.getString("keyConteiner");
+        calculator.operator = savedInstanceState.getString("keyOperator");
+        calculator.startOperation = savedInstanceState.getBoolean("startOperation");
+        calculator.startOperationSin = savedInstanceState.getBoolean("startOperationSin");
+        refreshScreens();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("settings");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getTitle().equals("settings")) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivityForResult(intent, 1);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        recreate();
     }
 }
